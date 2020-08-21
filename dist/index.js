@@ -49,6 +49,14 @@ require('./sourcemap-register.js');module.exports =
 /************************************************************************/
 /******/ ({
 
+/***/ 27:
+/***/ (function(module) {
+
+module.exports = eval("require")("@actions/io");
+
+
+/***/ }),
+
 /***/ 87:
 /***/ (function(module) {
 
@@ -412,20 +420,24 @@ module.exports = require("path");
 /***/ (function(__unusedmodule, __unusedexports, __webpack_require__) {
 
 const core = __webpack_require__(186);
+const io = __webpack_require__(27);
+
 const wait = __webpack_require__(258);
 
 
 // most @actions toolkit packages have async methods
 async function run() {
   try {
-    const ms = core.getInput('milliseconds');
-    core.info(`Waiting ${ms} milliseconds ...`);
+    await io.mkdirP('wow test');
+    // console.log("wowo it runs")
+    // const ms = core.getInput('milliseconds');
+    // core.info(`Waiting ${ms} milliseconds ...`);
 
-    core.debug((new Date()).toTimeString()); // debug is only output if you set the secret `ACTIONS_RUNNER_DEBUG` to true
-    await wait(parseInt(ms));
-    core.info((new Date()).toTimeString());
+    // core.debug((new Date()).toTimeString()); // debug is only output if you set the secret `ACTIONS_RUNNER_DEBUG` to true
+    // await wait(parseInt(ms));
+    // core.info((new Date()).toTimeString());
 
-    core.setOutput('time', new Date().toTimeString());
+    // core.setOutput('time', new Date().toTimeString());
   } catch (error) {
     core.setFailed(error.message);
   }
