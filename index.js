@@ -29,6 +29,8 @@ async function run() {
       ...repoInfo,
       file_sha,
     });
+    console.log(file_sha, path, rest, fileBase64)
+
     const fileTextForWaldo = base64.decode(fileBase64.data.content);
     const waldosPosition = Math.floor(Math.random() * fileTextForWaldo.length);
 
