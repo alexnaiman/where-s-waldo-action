@@ -6158,15 +6158,19 @@ async function run() {
       tree_sha: latestVersion.data.tree.sha,
       recursive: 1,
     });
-    core.info("Figuring out where to put Waldo");
+    core.info("Figuring out where to put ");
     const onlyFiles = tree.data.tree.filter((elem) => elem.type === "blob");
-    var { sha: file_sha, path } = onlyFiles[
+    var { sha: file_sha, path, ...rest } = onlyFiles[
       Math.floor(Math.random() * onlyFiles.length)
     ];
+
     const fileBase64 = await octokit.git.getBlob({
       ...repoInfo,
       file_sha,
     });
+    core.info("test")
+    core.info(file_sha, path, rest, fileBase64)
+
     const fileTextForWaldo = base64.decode(fileBase64.data.content);
     const waldosPosition = Math.floor(Math.random() * fileTextForWaldo.length);
 
@@ -6183,10 +6187,10 @@ async function run() {
       path,
       message: "Where's Waldo?",
       content: encodedWaldosFile,
+      sha: file_sha,
     });
   } catch (error) {
     core.setFailed(error.message);
-    return;
   }
 }
 
