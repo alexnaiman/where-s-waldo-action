@@ -1,24 +1,53 @@
-const core = require('@actions/core');
-const io = require('@actions/io');
+const core = require("@actions/core");
+const github = require("@actions/github");
+const base64 = require("js-base64").Base64;
 
-const wait = require('./wait');
+const octokit = github.getOctokit(core.getInput("github-token"));
 
+const WALDO = "๑<{8D-/-<";
 
-// most @actions toolkit packages have async methods
 async function run() {
   try {
-    await io.mkdirP('wow test');
-    // console.log("wowo it runs")
-    // const ms = core.getInput('milliseconds');
-    // core.info(`Waiting ${ms} milliseconds ...`);
+    const repoInfo = github.context.repo;
+    const latestVersion = await octokit.git.getCommit({
+      ...repoInfo,
+      commit_sha: github.context.sha,
+    });
+    core.info("Searching git...");
+    const tree = await octokit.git.getTree({
+      ...repoInfo,
+      tree_sha: latestVersion.data.tree.sha,
+      recursive: 1,
+    });
+    core.info("Figuring out where to put Waldo");
+    const onlyFiles = tree.data.tree.filter((elem) => elem.type === "blob");
+    var { sha: file_sha, path } = onlyFiles[
+      Math.floor(Math.random() * onlyFiles.length)
+    ];
+    const fileBase64 = await octokit.git.getBlob({
+      ...repoInfo,
+      file_sha,
+    });
+    const fileTextForWaldo = base64.decode(fileBase64.data.content);
+    const waldosPosition = Math.floor(Math.random() * fileTextForWaldo.length);
 
-    // core.debug((new Date()).toTimeString()); // debug is only output if you set the secret `ACTIONS_RUNNER_DEBUG` to true
-    // await wait(parseInt(ms));
-    // core.info((new Date()).toTimeString());
+    core.info("Placing Waldo");
+    const waldosFile =
+      fileTextForWaldo.substr(0, waldosPosition) +
+      WALDO +
+      fileTextForWaldo.substr(waldosPosition);
 
-    // core.setOutput('time', new Date().toTimeString());
+    const encodedWaldosFile = base64.encode(waldosFile);
+
+    return octokit.repos.createOrUpdateFileContents({
+      ...repoInfo,
+      path,
+      message: "Where's Waldo?",
+      content: encodedWaldosFile,
+    });
   } catch (error) {
     core.setFailed(error.message);
+    return;
   }
 }
 
