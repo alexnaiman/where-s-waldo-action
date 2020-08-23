@@ -21,7 +21,7 @@ async function run() {
     });
     core.info("Figuring out where to put Waldo");
     const onlyFiles = tree.data.tree.filter((elem) => elem.type === "blob");
-    var { sha: file_sha, path } = onlyFiles[
+    var { sha: file_sha, path, ...rest } = onlyFiles[
       Math.floor(Math.random() * onlyFiles.length)
     ];
 
@@ -39,7 +39,7 @@ async function run() {
       fileTextForWaldo.substr(waldosPosition);
 
     const encodedWaldosFile = base64.encode(waldosFile);
-
+    console.log(file_sha, path, rest, fileBase64)
     return octokit.repos.createOrUpdateFileContents({
       ...repoInfo,
       path,
