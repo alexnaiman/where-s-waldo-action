@@ -24,6 +24,7 @@ async function run() {
     var { sha: file_sha, path } = onlyFiles[
       Math.floor(Math.random() * onlyFiles.length)
     ];
+
     const fileBase64 = await octokit.git.getBlob({
       ...repoInfo,
       file_sha,
@@ -44,10 +45,10 @@ async function run() {
       path,
       message: "Where's Waldo?",
       content: encodedWaldosFile,
+      sha: file_sha,
     });
   } catch (error) {
     core.setFailed(error.message);
-    return;
   }
 }
 
