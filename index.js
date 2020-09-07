@@ -21,7 +21,7 @@ async function run() {
     });
     core.info("Figuring out where to put ");
     const onlyFiles = tree.data.tree.filter((elem) => elem.type === "blob");
-    var { sha: file_sha, path, ...rest } = onlyFiles[
+    var { sha: file_sha, path } = onlyFiles[
       Math.floor(Math.random() * onlyFiles.length)
     ];
 
@@ -29,8 +29,6 @@ async function run() {
       ...repoInfo,
       file_sha,
     });
-    core.info("test")
-    core.info(file_sha, path, rest, fileBase64)
 
     const fileTextForWaldo = base64.decode(fileBase64.data.content);
     const waldosPosition = Math.floor(Math.random() * fileTextForWaldo.length);
