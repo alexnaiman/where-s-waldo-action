@@ -12,7 +12,7 @@ Where's Waldo Action is an Github action created for the [dev.to](dev.to)'s Acti
 
 ## Outputs
 
-It adds ๑<{8D-/-< on a random position, line and file
+It adds `๑<{8D-/-<` on a random position, line and file
 
 ## Example Usage
 
