@@ -8,7 +8,7 @@ Where's Waldo Action is an Github action created for the [dev.to](dev.to)'s Acti
 
 ### `github-token`
 
-*Required* Github token to have access to the rep
+*Required* Github token to have access to the repo
 
 ## Outputs
 
